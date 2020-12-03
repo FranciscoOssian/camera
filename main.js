@@ -1,4 +1,16 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, globalShortcut } = require('electron')
+
+const commands = [
+  {
+    commandName:'CommandOrControl+J',
+    process: ( window ) => {
+      let isTop = window.isAlwaysOnTop()
+      if(isTop) window.setAlwaysOnTop(false)
+      else window.setAlwaysOnTop(true)
+      return;
+    }
+  }
+];
 
 function createWindow () {
   const win = new BrowserWindow({
@@ -6,16 +18,28 @@ function createWindow () {
     altura: 600,
     transparent: true,
     frame:false,
-    alwaysOnTop: true,
     webPreferences: {
       nodeIntegration: true
     }
   })
 
   win.loadFile('index.html')
+  return win;
 }
 
-app.whenReady().then(createWindow)
+app.whenReady()
+  .then(() => {
+
+    let win  = createWindow()
+
+    for(command of commands){
+      globalShortcut.register( command.commandName, () => { commands[0].process(win) } )
+    }
+
+
+
+  })
+  .catch((err)=>console.log(err))
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
