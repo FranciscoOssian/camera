@@ -1,16 +1,6 @@
 const { app, BrowserWindow, globalShortcut } = require('electron')
 
-const commands = [
-  {
-    commandName:'CommandOrControl+J',
-    process: ( window ) => {
-      let isTop = window.isAlwaysOnTop()
-      if(isTop) window.setAlwaysOnTop(false)
-      else window.setAlwaysOnTop(true)
-      return;
-    }
-  }
-];
+const commands = require('./src/commands/main.js');
 
 function createWindow () {
   const win = new BrowserWindow({
